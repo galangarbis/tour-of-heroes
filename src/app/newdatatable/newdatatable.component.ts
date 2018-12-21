@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ExpenseService } from '../expense.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-newdatatable',
@@ -6,21 +8,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./newdatatable.component.css']
 })
 export class NewdatatableComponent implements OnInit {
+  rows = [];
+  testResponse: any;
+  constructor(private expenseService: ExpenseService,private http: HttpClient) { }
 
-  // constructor() { }
-
+  getExpense(): void {
+    // this.expenseService.getExpense().subscribe(data => {
+    //   this.testResponse = data;
+    //   console.log("I CAN SEE DATA HERE: ", this.testResponse);
+    // });
+    this.http.get<any>('http://localhost:5000/datatableservice/Api/expense')
+      .subscribe(data =>
+        // console.log(data)
+        this.rows = data
+      );
+  }
 
   ngOnInit() {
+    this.getExpense();
   }
-  rows = [
-    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-    { name: 'Dany', gender: 'Male', company: 'KFC' },
-    { name: 'Molly', gender: 'Female', company: 'Burger King' }
-  ];
-
   columns = [
-    {prop: 'name'},
-    {name: 'Gender'},
-    {name: 'Company'}
+    {prop: 'id'},
+    {name: 'voucher_code'},
+    {name: 'nama'},
+    {name: 'tanggal_klaim'},
+    {name: 'keterangan'},
+    {name: 'nominal'}
   ];
 }
